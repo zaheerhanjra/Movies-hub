@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieHub - Upload and Watch Movies</title>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-buttons .btn {
+            margin-left: 10px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--secondary-color);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1920x1080') no-repeat center center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* Movie Grid */
+        .section-title {
+            text-align: center;
+            margin: 50px 0 30px;
+            font-size: 32px;
+            color: var(--secondary-color);
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .movie-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 20px;
+        }
+
+        .movie-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .movie-rating {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+
+        .movie-description {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Upload Form */
+        .upload-section {
+            background-color: white;
+            padding: 50px 0;
+        }
+
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: block;
+            font-size: 16px;
+            color: #777;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--primary-color);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .cast-container {
+            margin-bottom: 20px;
+        }
+
+        .cast-member {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .cast-member input {
+            flex: 1;
+        }
+
+        .remove-cast {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+
+        #add-cast {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: white;
+            margin: 0 15px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            color: #bbb;
+            font-size: 14px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            color: var(--secondary-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 20px;
+                justify-content: center;
+            }
+
+            .auth-buttons {
+                margin-top: 20px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .cast-member {
+                flex-direction: column;
+            }
+
+            .cast-member input {
+                width: 100%;
+            }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            transform: translateX(200%);
+            transition: transform 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">Movie<span>Hub</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#movies">Movies</a></li>
+                    <li><a href="#upload">Upload</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-outline" id="login-btn">Login</button>
+                <button class="btn btn-primary" id="register-btn">Register</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <h1>Watch and Share Your Favorite Movies</h1>
+            <p>Join our community of movie enthusiasts and upload your favorite films for others to enjoy.</p>
+            <button class="btn btn-primary" id="hero-upload-btn">Upload a Movie</button>
+        </div>
+    </section>
+
+    <!-- Featured Movies -->
+    <section class="container" id="movies">
+        <h2 class="section-title">Featured Movies</h2>
+        <div class="movie-grid" id="movie-grid">
+            <!-- Movies will be loaded here dynamically -->
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="upload-section" id="upload">
+        <div class="upload-container">
+            <h2 class="upload-title">Upload a Movie</h2>
+            <form id="movie-upload-form">
+                <div class="form-group">
+                    <label for="movie-title">Movie Title</label>
+                    <input type="text" id="movie-title" name="movie-title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="movie-description">Description</label>
+                    <textarea id="movie-description" name="movie-description" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="movie-year">Release Year</label>
+                        <input type="number" id="movie-year" name="movie-year" min="1900" max="2023" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="movie-runtime">Runtime (minutes)</label>
+                        <input type="number" id="movie-runtime" name="movie-runtime" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="movie-director">Director</label>
+                        <input type="text" id="movie-director" name="movie-director" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="movie-rating">IMDb Rating</label>
+                        <input type="number" id="movie-rating" name="movie-rating" min="0" max="10" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Genres</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="genre-action" name="genre" value="Action">
+                            <label for="genre-action">Action</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="genre-comedy" name="genre" value="Comedy">
+                            <label for="genre-comedy">Comedy</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="genre-drama" name="genre" value="Drama">
+                            <label for="genre-drama">Drama</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="genre-horror" name="genre" value="Horror">
+                            <label for="genre-horror">Horror</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="genre-scifi" name="genre" value="Sci-Fi">
+                            <label for="genre-scifi">Sci-Fi</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="genre-thriller" name="genre" value="Thriller">
+                            <label for="genre-thriller">Thriller</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cast</label>
+                    <div class="cast-container" id="cast-container">
+                        <div class="cast-member">
+                            <input type="text" name="cast-name[]" placeholder="Actor name">
+                            <input type="text" name="cast-role[]" placeholder="Role">
+                            <button type="button" class="remove-cast">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-cast">Add Cast Member</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="movie-trailer">Trailer URL (YouTube/Vimeo)</label>
+                    <input type="url" id="movie-trailer" name="movie-trailer">
+                </div>
+
+                <div class="form-group">
+                    <label>Movie Poster</label>
+                    <div class="file-upload" id="poster-upload">
+                        <input type="file" id="movie-poster" name="movie-poster" accept="image/*" required>
+                        <label for="movie-poster" class="file-upload-label">Click to upload poster image</label>
+                        <div class="file-name" id="poster-file-name">No file selected</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Movie File</label>
+                    <div class="file-upload" id="video-upload">
+                        <input type="file" id="movie-file" name="movie-file" accept="video/*" required>
+                        <label for="movie-file" class="file-upload-label">Click to upload movie file</label>
+                        <div class="file-name" id="video-file-name">No file selected</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary submit-btn">Upload Movie</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#movies">Movies</a>
+                <a href="#upload">Upload</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#privacy">Privacy Policy</a>
+            </div>
+            <p class="copyright">© 2023 MovieHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Login</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Register</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" name="register-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" name="register-email" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="register-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Confirm Password</label>
+                        <input type="password" id="register-confirm" name="register-confirm" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Sample movie data
+        const movies = [
+            {
+                id: 1,
+                title: "Inception",
+                year: 2010,
+                runtime: 148,
+                director: "Christopher Nolan",
+                rating: 8.8,
+                genres: ["Action", "Sci-Fi", "Thriller"],
+                description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+                poster: "https://via.placeholder.com/300x450?text=Inception"
+            },
+            {
+                id: 2,
+                title: "The Shawshank Redemption",
+                year: 1994,
+                runtime: 142,
+                director: "Frank Darabont",
+                rating: 9.3,
+                genres: ["Drama"],
+                description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+                poster: "https://via.placeholder.com/300x450?text=Shawshank"
+            },
+            {
+                id: 3,
+                title: "The Dark Knight",
+                year: 2008,
+                runtime: 152,
+                director: "Christopher Nolan",
+                rating: 9.0,
+                genres: ["Action", "Crime", "Drama"],
+                description: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+                poster: "https://via.placeholder.com/300x450?text=Dark+Knight"
+            },
+            {
+                id: 4,
+                title: "Pulp Fiction",
+                year: 1994,
+                runtime: 154,
+                director: "Quentin Tarantino",
+                rating: 8.9,
+                genres: ["Crime", "Drama"],
+                description: "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
+                poster: "https://via.placeholder.com/300x450?text=Pulp+Fiction"
+            },
+            {
+                id: 5,
+                title: "The Godfather",
+                year: 1972,
+                runtime: 175,
+                director: "Francis Ford Coppola",
+                rating: 9.2,
+                genres: ["Crime", "Drama"],
+                description: "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
+                poster: "https://via.placeholder.com/300x450?text=Godfather"
+            },
+            {
+                id: 6,
+                title: "Fight Club",
+                year: 1999,
+                runtime: 139,
+                director: "David Fincher",
+                rating: 8.8,
+                genres: ["Drama"],
+                description: "An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more.",
+                poster: "https://via.placeholder.com/300x450?text=Fight+Club"
+            }
+        ];
+
+        // DOM Elements
+        const movieGrid = document.getElementById('movie-grid');
+        const movieUploadForm = document.getElementById('movie-upload-form');
+        const castContainer = document.getElementById('cast-container');
+        const addCastBtn = document.getElementById('add-cast');
+        const posterUpload = document.getElementById('poster-upload');
+        const videoUpload = document.getElementById('video-upload');
+        const posterFileName = document.getElementById('poster-file-name');
+        const videoFileName = document.getElementById('video-file-name');
+        const posterInput = document.getElementById('movie-poster');
+        const videoInput = document.getElementById('movie-file');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const heroUploadBtn = document.getElementById('hero-upload-btn');
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        const notification = document.getElementById('notification');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMovies();
+            setupEventListeners();
+        });
+
+        // Render movies to the grid
+        function renderMovies() {
+            movieGrid.innerHTML = '';
+            movies.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.className = 'movie-card';
+                movieCard.innerHTML = `
+                    <img src="${movie.poster}" alt="${movie.title}" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <div class="movie-meta">
+                            <span>${movie.year}</span>
+                            <span class="movie-rating">★ ${movie.rating}</span>
+                        </div>
+                        <p class="movie-description">${movie.description}</p>
+                        <button class="btn btn-primary" data-id="${movie.id}">Watch Now</button>
+                    </div>
+                `;
+                movieGrid.appendChild(movieCard);
+            });
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Add cast member
+            addCastBtn.addEventListener('click', () => {
+                const castMember = document.createElement('div');
+                castMember.className = 'cast-member';
+                castMember.innerHTML = `
+                    <input type="text" name="cast-name[]" placeholder="Actor name">
+                    <input type="text" name="cast-role[]" placeholder="Role">
+                    <button type="button" class="remove-cast">Remove</button>
+                `;
+                castContainer.appendChild(castMember);
+            });
+
+            // Remove cast member
+            castContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-cast')) {
+                    e.target.parentElement.remove();
+                }
+            });
+
+            // File upload display
+            posterInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    posterFileName.textContent = e.target.files[0].name;
+                }
+            });
+
+            videoInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    videoFileName.textContent = e.target.files[0].name;
+                }
+            });
+
+            // Form submission
+            movieUploadForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // In a real app, you would send this data to your server
+                const formData = new FormData(movieUploadForm);
+                console.log('Form data:', Object.fromEntries(formData));
+                
+                // Show success notification
+                showNotification('Movie uploaded successfully!', 'success');
+                
+                // Reset form
+                movieUploadForm.reset();
+                posterFileName.textContent = 'No file selected';
+                videoFileName.textContent = 'No file selected';
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Modal controls
+            loginBtn.addEventListener('click', () => {
+                loginModal.style.display = 'flex';
+            });
+
+            registerBtn.addEventListener('click', () => {
+                registerModal.style.display = 'flex';
+            });
+
+            heroUploadBtn.addEventListener('click', () => {
+                document.getElementById('upload').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    loginModal.style.display = 'none';
+                    registerModal.style.display = 'none';
+                });
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === loginModal) {
+                    loginModal.style.display = 'none';
+                }
+                if (e.target === registerModal) {
+                    registerModal.style.display = 'none';
+                }
+            });
+
+            // Login form submission
+            document.getElementById('login-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                // In a real app, you would validate and send to your server
+                showNotification('Logged in successfully!', 'success');
+                loginModal.style.display = 'none';
+            });
+
+            // Register form submission
+            document.getElementById('register-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                // In a real app, you would validate and send to your server
+                showNotification('Account created successfully!', 'success');
+                registerModal.style.display = 'none';
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
